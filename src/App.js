@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+import SignUp from "./components/SignUp";
+import Login from "./components/Login";
+import ToDo from "./components/ToDo";
+import Cookies from "universal-cookie";
+import ForgotPassword from "./components/ForgotPassword";
+const cookies = new Cookies();
+const token = cookies.get("TOKEN");
 
 function App() {
+  const ProtectedRoute = ({ token, redirectPath = "/" }) => {
+    if (!token) {
+      return <Navigate to={redirectPath} replace />;
+    }
+
+    return <Outlet />;
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route element={<ProtectedRoute token={token} />}>
+          <Route path="/todo" element={<ToDo />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
