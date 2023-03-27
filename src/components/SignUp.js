@@ -25,9 +25,7 @@ export default function SignUp() {
     if (readyToSend) {
       axios
         .post(`${BASE_URL}/register`, user)
-        .then((result) => {
-          console.log(result.data);
-        })
+        .then((result) => {})
         .catch((er) => {
           setEmailError("There is such an email already");
           console.log(emailError);
